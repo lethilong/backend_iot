@@ -1,10 +1,22 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { HomeModule } from './home/home.module';
+import { RoomModule } from './room/room.module';
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGO_URI),
+    UserModule,
+    AuthModule,
+    HomeModule,
+    RoomModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
