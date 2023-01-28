@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @Schema({ timestamps: true })
-export class RoomType {
+export class DeviceType {
     @Prop({ required: true })
     name: string;
 
@@ -9,5 +9,5 @@ export class RoomType {
     processedName: string;
 }
 
-export type RoomTypeDocument = RoomType & Document;
-export const RoomTypeSchema = SchemaFactory.createForClass(RoomType);
+export type DeviceTypeDocument = DeviceType & Document;
+export const DeviceTypeSchema = SchemaFactory.createForClass(DeviceType);
