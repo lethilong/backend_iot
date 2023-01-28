@@ -20,8 +20,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
          */
         const responseMessage = (status, message) => {
             response.status(status).json({
-                success: false,
-                message: "Error: " + message
+                data: {
+                    success: false,
+                    message: message,
+                }
             });
         };
         switch (exception.name) {

@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { HomeModule } from './home/home.module';
 import { RoomModule } from './room/room.module';
+import { DeviceModule } from './device/device.module';
+import { MqttModule } from './mqtt/mqtt.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -15,6 +17,8 @@ import { RoomModule } from './room/room.module';
     AuthModule,
     HomeModule,
     RoomModule,
+    DeviceModule,
+    MqttModule,
   ],
   controllers: [AppController],
   providers: [AppService],

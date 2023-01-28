@@ -14,8 +14,11 @@ export class Home {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
     host: User;
 
-    @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Room' })
-    rooms: Room[];
+    @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'User' })
+    members: User[];
+
+    // @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Room' })
+    // rooms: Room[];
 }
 
 export type HomeDocument = Home & Document;

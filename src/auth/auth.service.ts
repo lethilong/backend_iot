@@ -3,6 +3,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
+import { BadRequestException } from '@nestjs/common/exceptions';
 
 
 @Injectable()
@@ -23,10 +24,13 @@ export class AuthService {
     }
 
     async register(data): Promise<ConfirmResponse> {
-        const { phone, password } = data;
+        const { phone, password, rePassword } = data;
         const user = await this.usersService.getUserByPhone(phone);
         if (user) {
             throw new ConflictException('User with this phone already existed');
+        }
+        if (password !== rePassword) {
+            throw new BadRequestException('Password and confirm password not match');
         }
         data.password = await bcrypt.hash(password, 10);
         const newUser = await this.usersService.createUser(data);
@@ -45,6 +49,7 @@ export class AuthService {
             data: {
                 success: true,
                 token: this.jwtService.sign(payload),
+                id: user._id,
             }
         })
     }
