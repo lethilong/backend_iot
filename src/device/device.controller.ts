@@ -46,6 +46,8 @@ export class DeviceController {
     }
 
     @Patch(':id/control')
+    @ApiTags('Control device')
+    @ApiBody({ type: ControlDeviceDto })
     async controlDevice(@Param('id') id: string, @Body() data: ControlDeviceDto) {
         return await this.deviceService.controlDevice(id, data);
     }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -9,10 +10,15 @@ import { HomeModule } from './home/home.module';
 import { RoomModule } from './room/room.module';
 import { DeviceModule } from './device/device.module';
 import { MqttModule } from './mqtt/mqtt.module';
+import { join } from 'path';
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URI),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads/',
+    }),
     UserModule,
     AuthModule,
     HomeModule,

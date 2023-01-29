@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './user.schema';
 
 @Injectable()
@@ -49,5 +51,35 @@ export class UserService {
       }
     })
     return homes;
+  }
+
+  async updateProfile(id: string, data: UpdateUserDto) {
+    const { phone } = data;
+    if (phone) {
+      const user = await this.getUserByPhone(phone);
+      if (user) {
+        throw new ConflictException('User with this phone already existed');
+      }
+    }
+    await this.userModel.findByIdAndUpdate(id, data);
+    return new ConfirmResponse({
+      data: {
+        success: true,
+      }
+    })
+  }
+
+  async updateAvatar(id, file) {
+    if (!file) {
+      throw new BadRequestException('Empty file avatar');
+    }
+    const avatar = file.path.split('\\').join('/');
+    await this.userModel.findByIdAndUpdate(id, { avatar: avatar });
+    return new ConfirmResponse({
+      data: {
+        success: true,
+        avatar: avatar,
+      },
+    });
   }
 }
