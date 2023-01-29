@@ -14,13 +14,13 @@ export class UserController {
 
   @Patch('profile')
   @ApiBody({ type: UpdateUserDto })
-  @ApiTags('Update user profile')
+  @ApiTags('[USER] Update user profile')
   async updateProfile(@Req() req, @Body() data: UpdateUserDto) {
     return await this.userService.updateProfile(req.user.id, data);
   }
 
   @Post('upload/avatar')
-  @ApiTags('Upload avatar (note: use field avatar in body request)')
+  @ApiTags('[USER] Upload avatar (note: use field avatar in body request)')
   @UseInterceptors(
     FileInterceptor('avatar', {
       fileFilter: (req, file, cb) => {

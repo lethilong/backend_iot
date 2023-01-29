@@ -15,38 +15,38 @@ export class DeviceController {
     ) { }
 
     @Get('device-types')
-    @ApiTags('Get all device types')
+    @ApiTags('[DEVICE] Get all device types')
     async getAllDeviceTypes() {
         return await this.deviceService.getAllDeviceTypes();
     }
 
     @Post('device-types')
     @ApiBody({ type: CreateDeviceTypeDto })
-    @ApiTags('Create a new device types')
+    @ApiTags('[DEVICE] Create a new device types')
     async createRoomType(@Body() data: CreateDeviceTypeDto) {
         return await this.deviceService.createDeviceType(data);
     }
     @Post()
     @ApiBody({ type: CreateDeviceDto })
-    @ApiTags('Create a new device')
+    @ApiTags('[DEVICE] Create a new device')
     async createDevice(@Body() data: CreateDeviceDto) {
         return await this.deviceService.createDevice(data);
     }
 
     @Get(':id')
-    @ApiTags('Get device detail')
+    @ApiTags('[DEVICE] Get device detail')
     async getDeviceDetail(@Param('id') id: string) {
         return await this.deviceService.getDevice(id);
     }
 
     @Delete(':id')
-    @ApiTags('Delete a device')
+    @ApiTags('[DEVICE] Delete a device')
     async deleteDevice(@Param('id') id: string) {
         return await this.deviceService.deleteDevice(id);
     }
 
     @Patch(':id/control')
-    @ApiTags('Control device')
+    @ApiTags('[DEVICE] Control device')
     @ApiBody({ type: ControlDeviceDto })
     async controlDevice(@Param('id') id: string, @Body() data: ControlDeviceDto) {
         return await this.deviceService.controlDevice(id, data);

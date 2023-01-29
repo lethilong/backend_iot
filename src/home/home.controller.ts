@@ -17,33 +17,33 @@ export class HomeController {
     ) { }
     @Post()
     @ApiBody({ type: CreateHomeDto })
-    @ApiTags('Create new home')
+    @ApiTags('[HOME] Create new home')
     async createHome(@Req() req, @Body() data: CreateHomeDto): Promise<ConfirmResponse> {
         return await this.homeService.createHome(req.user.id, data);
     }
 
     @Get()
-    @ApiTags('Get my all homes')
+    @ApiTags('[HOME] Get my all homes')
     async getHomes(@Req() req): Promise<ConfirmResponse> {
         return await this.homeService.getHomes(req.user.id);
     }
 
     @Patch(':id/add-member')
     @ApiBody({ type: AddMemberDto })
-    @ApiTags('Add new member')
+    @ApiTags('[HOME] Add new member')
     async addMember(@Req() req, @Param('id') id: string, @Body() data: AddMemberDto): Promise<ConfirmResponse> {
         return await this.homeService.addMember(req.user.id, id, data);
     }
 
     @Patch(':id/remove-member')
     @ApiBody({ type: RemoveMemberDto })
-    @ApiTags('Remove member')
+    @ApiTags('[HOME] Remove member')
     async removeMember(@Req() req, @Param('id') id: string, @Body() data: RemoveMemberDto): Promise<ConfirmResponse> {
         return await this.homeService.removeMember(req.user.id, id, data);
     }
 
     @Get(':id')
-    @ApiTags('Get home information')
+    @ApiTags('[HOME] Get home information')
     async getHome(@Req() req, @Param('id') id: string): Promise<ConfirmResponse> {
         return await this.homeService.getHome(req.user.id, id);
     }
