@@ -10,6 +10,12 @@ export class User {
     @Prop({ required: true, unique: true, match: /^0[0-9]{9,10}$/ })
     phone: string;
 
+    @Prop({ required: false })
+    email: string;
+
+    @Prop({ required: false })
+    avatar: string;
+
     @Prop({ required: true })
     password: string;
 
