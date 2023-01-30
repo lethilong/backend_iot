@@ -22,7 +22,7 @@ export class DeviceController {
 
     @Post('device-types')
     @ApiBody({ type: CreateDeviceTypeDto })
-    @ApiTags('[DEVICE] Create a new device types')
+    @ApiTags('[DEVICE] Create a new device type')
     async createRoomType(@Body() data: CreateDeviceTypeDto) {
         return await this.deviceService.createDeviceType(data);
     }

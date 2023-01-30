@@ -82,4 +82,14 @@ export class UserService {
       },
     });
   }
+
+  async getProfile(id: string) {
+    const user = await this.userModel.findById(id).select('name phone email avatar');
+    return new ConfirmResponse({
+      data: {
+        success: true,
+        user,
+      }
+    })
+  }
 }

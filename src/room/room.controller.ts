@@ -21,7 +21,7 @@ export class RoomController {
 
     @Post('room-types')
     @ApiBody({ type: CreateRoomTypeDto })
-    @ApiTags('[ROOM] Create a new room types')
+    @ApiTags('[ROOM] Create a new room type')
     async createRoomType(@Body() data: CreateRoomTypeDto) {
         return await this.roomService.createRoomType(data);
     }
