@@ -95,7 +95,7 @@ export class DeviceService {
             throw new BadRequestException('Device not existed');
         }
         await this.deviceModel.findByIdAndUpdate(id, data);
-        this.mqttService.publish(process.env.MQTT_TOPIC, JSON.stringify({ ...data, deviceId: id }));
+        this.mqttService.publish(process.env.MQTT_TOPIC_CONTROL, JSON.stringify({ ...data, deviceId: id }));
         return new ConfirmResponse({
             data: {
                 success: true,
