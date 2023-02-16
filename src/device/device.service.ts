@@ -102,4 +102,13 @@ export class DeviceService {
             }
         })
     }
+
+    async getData(payload) {
+        const { message, deviceId } = payload;
+        const device = await this.deviceModel.findById(deviceId);
+        if (device) {
+            device.data.unshift(message);
+            await device.save();
+        }
+    }
 }
