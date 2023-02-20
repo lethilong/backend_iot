@@ -94,8 +94,10 @@ export class DeviceService {
         if (!device) {
             throw new BadRequestException('Device not existed');
         }
-        await this.deviceModel.findByIdAndUpdate(id, data);
-        this.mqttService.publish(process.env.MQTT_TOPIC_CONTROL, JSON.stringify({ ...data, deviceId: id }));
+        // console.log({ ...device.control._doc, ...data });
+        // await device.save();
+        await this.deviceModel.findByIdAndUpdate(id, { control: data });
+        this.mqttService.publish(process.env.MQTT_TOPIC_CONTROL, JSON.stringify({ control: data, deviceId: id }));
         return new ConfirmResponse({
             data: {
                 success: true,
@@ -104,11 +106,19 @@ export class DeviceService {
     }
 
     async getData(payload) {
-        const { message, deviceId } = payload;
+        const { message, control, deviceId } = payload;
         const device = await this.deviceModel.findById(deviceId);
         if (device) {
-            device.data.unshift(message);
-            await device.save();
+            if (message) {
+                device.data.unshift(message);
+                await device.save();
+            }
+
+            if (control) {
+                device.control = control;
+                await device.save();
+            }
+
         }
     }
 }

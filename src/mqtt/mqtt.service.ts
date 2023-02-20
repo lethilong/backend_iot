@@ -23,6 +23,6 @@ export class MqttService implements OnModuleInit {
     };
 
     publish(topic: string, payload) {
-        this.mqttClient.publish(topic, payload);
+        this.mqttClient.publish(topic, payload, { retain: false, qos: 2 });
     };
 }
