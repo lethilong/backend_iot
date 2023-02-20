@@ -5,13 +5,9 @@ import { connect } from 'mqtt';
 export class MqttService implements OnModuleInit {
     private mqttClient;
     onModuleInit() {
-        const broker = 'broker.hivemq.com';
-        const port = 1883;
-        const topic = 'iot/group8';
-        const url = `mqtt://${broker}:${port}`;
+        const url = process.env.MQTT_URL;
         const options = {
-            clientId: 'iot_group8',
-            connectTimeout: 5000,
+            clientId: process.env.MQTT_CLIENTID,
             username: process.env.MQTT_USERNAME,
             password: process.env.MQTT_PASSWORD,
         }
@@ -27,13 +23,6 @@ export class MqttService implements OnModuleInit {
     };
 
     publish(topic: string, payload) {
-        this.mqttClient.publish(topic, payload);
+        this.mqttClient.publish(topic, payload, { retain: false, qos: 2 });
     };
-
-    subscribe(topic: string) {
-        this.mqttClient.subscribe(topic);
-        this.mqttClient.on('message', (tp, msg) => {
-            console.log(JSON.parse(msg));
-        });
-    }
 }

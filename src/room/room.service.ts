@@ -87,9 +87,18 @@ export class RoomService {
                 }
             },
             {
+                $lookup: {
+                    from: 'devices',
+                    localField: '_id',
+                    foreignField: 'room',
+                    as: 'devices',
+                }
+            },
+            {
                 $project: {
                     name: 1,
-                    roomType: { $first: '$roomType' }
+                    roomType: { $first: '$roomType' },
+                    devicesNum: { $size: '$devices' }
                 }
             },
             {

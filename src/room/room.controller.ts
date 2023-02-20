@@ -14,33 +14,33 @@ export class RoomController {
         private roomService: RoomService
     ) { }
     @Get('room-types')
-    @ApiTags('Get all room types')
+    @ApiTags('[ROOM] Get all room types')
     async getAllRoomTypes(): Promise<ConfirmResponse> {
         return await this.roomService.getAllRoomTypes();
     }
 
     @Post('room-types')
     @ApiBody({ type: CreateRoomTypeDto })
-    @ApiTags('Create a new room types')
+    @ApiTags('[ROOM] Create a new room type')
     async createRoomType(@Body() data: CreateRoomTypeDto) {
         return await this.roomService.createRoomType(data);
     }
 
     @Post()
     @ApiBody({ type: CreateRoomDto })
-    @ApiTags('Create a new room')
+    @ApiTags('[ROOM] Create a new room')
     async createRoom(@Req() req, @Body() data: CreateRoomDto) {
         return await this.roomService.createRoom(req.user.id, data)
     }
 
     @Get(':id')
-    @ApiTags('Get room detail')
+    @ApiTags('[ROOM] Get room detail')
     async getRoomDetail(@Param('id') id: string) {
         return await this.roomService.getRoomDetail(id);
     }
 
     @Delete(':id')
-    @ApiTags('Delete a room')
+    @ApiTags('[ROOM] Delete a room')
     async deleteRoom(@Req() req, @Param('id') id: string) {
         return await this.roomService.deleteRoom(req.user.id, id);
     }

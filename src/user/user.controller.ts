@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, UseInterceptors, BadRequestException, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Req, UseGuards, UseInterceptors, BadRequestException, UploadedFile, Get } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
@@ -14,13 +14,13 @@ export class UserController {
 
   @Patch('profile')
   @ApiBody({ type: UpdateUserDto })
-  @ApiTags('Update user profile')
+  @ApiTags('[USER] Update profile')
   async updateProfile(@Req() req, @Body() data: UpdateUserDto) {
     return await this.userService.updateProfile(req.user.id, data);
   }
 
   @Post('upload/avatar')
-  @ApiTags('Upload avatar (note: use field avatar in body request)')
+  @ApiTags('[USER] Upload avatar (note: use field avatar in body request)')
   @UseInterceptors(
     FileInterceptor('avatar', {
       fileFilter: (req, file, cb) => {
@@ -43,5 +43,11 @@ export class UserController {
   )
   async uploadAvatar(@Req() req, @UploadedFile() file: Express.Multer.File) {
     return this.userService.updateAvatar(req.user.id, file);
+  }
+
+  @Get('profile')
+  @ApiTags('[USER] Get profile')
+  async getProfile(@Req() req) {
+    return await this.userService.getProfile(req.user.id);
   }
 }

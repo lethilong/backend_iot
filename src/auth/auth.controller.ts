@@ -13,7 +13,7 @@ export class AuthController {
     ) { }
     @Post('register')
     @ApiBody({ type: RegisterDto })
-    @ApiTags('Register')
+    @ApiTags('[AUTH] Register')
     async register(@Body() user): Promise<ConfirmResponse> {
         return await this.authService.register(user);
     }
@@ -21,7 +21,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     @ApiBody({ type: LoginDto })
-    @ApiTags('Login')
+    @ApiTags('[AUTH] Login')
     async login(@Req() req): Promise<ConfirmResponse> {
         return await this.authService.login(req.user);
     }
