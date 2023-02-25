@@ -4,12 +4,13 @@ import { forwardRef } from '@nestjs/common/utils';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
+import { RequestMemberService } from 'src/request-member/request-member.service';
 import { RoomService } from 'src/room/room.service';
 import { UserService } from 'src/user/user.service';
 import { AddMemberDto } from './dto/add-member.dto';
 import { CreateHomeDto } from './dto/create-home.dto';
 import { RemoveMemberDto } from './dto/remove-member.dto';
-import { HomeDocument } from './home.schema';
+import { HomeDocument } from './schema/home.schema';
 
 @Injectable()
 export class HomeService {
@@ -18,7 +19,9 @@ export class HomeService {
         private homeModel: Model<HomeDocument>,
         private userService: UserService,
         @Inject(forwardRef(() => RoomService))
-        private roomService: RoomService
+        private roomService: RoomService,
+        @Inject(forwardRef(() => RequestMemberService))
+        private requestMemberService: RequestMemberService,
     ) { }
 
     async createHome(id, data: CreateHomeDto) {
@@ -55,7 +58,7 @@ export class HomeService {
             throw new NotFoundException('Home not existed');
         }
         if (home.host != id) {
-            throw new ForbiddenException('Only host can add member')
+            throw new ForbiddenException('Only host can invite member')
         }
         const { phone } = data;
         const member = await this.userService.getUserByPhone(phone);
@@ -65,10 +68,15 @@ export class HomeService {
         if (member.homes.findIndex(home => home == homeId) != -1) {
             throw new BadRequestException('User already added as a member')
         }
-        home.members.push(member.id);
-        member.homes.push(homeId);
-        await home.save();
-        await member.save();
+        const requestPending = await this.requestMemberService.getRequest({ to: member.id, home: homeId, status: 'Pending' });
+        if (requestPending) {
+            throw new BadRequestException('User already invited as a member')
+        }
+        await this.requestMemberService.createRequest({ from: id, to: member.id, home: homeId });
+        // home.members.push(member.id);
+        // member.homes.push(homeId);
+        // await home.save();
+        // await member.save();
         return new ConfirmResponse({
             data: {
                 success: true,

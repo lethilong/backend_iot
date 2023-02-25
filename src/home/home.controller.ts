@@ -28,9 +28,9 @@ export class HomeController {
         return await this.homeService.getHomes(req.user.id);
     }
 
-    @Patch(':id/add-member')
+    @Patch(':id/invite-member')
     @ApiBody({ type: AddMemberDto })
-    @ApiTags('[HOME] Add new member')
+    @ApiTags('[HOME] Invite new member')
     async addMember(@Req() req, @Param('id') id: string, @Body() data: AddMemberDto): Promise<ConfirmResponse> {
         return await this.homeService.addMember(req.user.id, id, data);
     }

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-import { Room } from "src/room/schemas/room.schema";
+import { Room } from "src/room/schema/room.schema";
 
 @Schema({ timestamps: true })
 export class Device {

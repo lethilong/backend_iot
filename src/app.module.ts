@@ -12,6 +12,7 @@ import { DeviceModule } from './device/device.module';
 import { MqttModule } from './mqtt/mqtt.module';
 import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
+import { RequestMemberModule } from './request-member/request-member.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -27,6 +28,7 @@ import { NotificationModule } from './notification/notification.module';
     DeviceModule,
     MqttModule,
     NotificationModule,
+    RequestMemberModule,
   ],
   controllers: [AppController],
   providers: [AppService],

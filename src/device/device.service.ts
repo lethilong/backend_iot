@@ -7,8 +7,8 @@ import { RoomService } from 'src/room/room.service';
 import { ControlDeviceDto } from './dto/control-device.dto';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { CreateDeviceDto } from './dto/create-device.dto';
-import { DeviceDocument } from './schemas/device.schema';
-import { DeviceTypeDocument } from './schemas/deviceType.schema';
+import { DeviceDocument } from './schema/device.schema';
+import { DeviceTypeDocument } from './schema/device-type.schema';
 
 @Injectable()
 export class DeviceService {
