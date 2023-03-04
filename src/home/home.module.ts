@@ -6,6 +6,7 @@ import { HomeSchema } from './schema/home.schema';
 import { UserModule } from 'src/user/user.module';
 import { RoomModule } from 'src/room/room.module';
 import { RequestMemberModule } from 'src/request-member/request-member.module';
+import { SocketService } from 'src/socket/socket.service';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { RequestMemberModule } from 'src/request-member/request-member.module';
     forwardRef(() => RequestMemberModule),
     MongooseModule.forFeature([{ name: 'Home', schema: HomeSchema }])
   ],
-  providers: [HomeService],
+  providers: [HomeService, SocketService],
   controllers: [HomeController],
   exports: [HomeService],
 })

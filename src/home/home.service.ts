@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
 import { RequestMemberService } from 'src/request-member/request-member.service';
 import { RoomService } from 'src/room/room.service';
+import { SocketService } from 'src/socket/socket.service';
 import { UserService } from 'src/user/user.service';
 import { AddMemberDto } from './dto/add-member.dto';
 import { CreateHomeDto } from './dto/create-home.dto';
@@ -22,6 +23,7 @@ export class HomeService {
         private roomService: RoomService,
         @Inject(forwardRef(() => RequestMemberService))
         private requestMemberService: RequestMemberService,
+        private socketService: SocketService,
     ) { }
 
     async createHome(id, data: CreateHomeDto) {
@@ -73,6 +75,21 @@ export class HomeService {
             throw new BadRequestException('User already invited as a member')
         }
         await this.requestMemberService.createRequest({ from: id, to: member.id, home: homeId });
+        const host = await this.userService.getUserById(id);
+        const requestData = {
+            from: {
+                id: host.id,
+                name: host.name,
+                phone: host.phone,
+            },
+            home: {
+                id: home.id,
+                name: home.name,
+                address: home.address,
+            },
+            message: `${host.name} invited you to become a member of ${home.name} home`
+        }
+        await this.socketService.sendRequest(member.id, requestData);
         // home.members.push(member.id);
         // member.homes.push(homeId);
         // await home.save();

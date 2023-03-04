@@ -39,7 +39,7 @@ export class DeviceService {
     }
 
     async getDevice(id: string) {
-        const device = await (await this.deviceModel.findById(id)).populate('type', 'name');
+        const device = await this.deviceModel.findById(id).populate('type', 'name');
         return new ConfirmResponse({
             data: {
                 success: true,

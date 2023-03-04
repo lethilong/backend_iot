@@ -8,7 +8,7 @@ import { Server, Socket } from 'socket.io';
         origin: '*',
     }
 })
-export class SocketIO {
+export class SocketService {
     @WebSocketServer()
     server: Server;
 
@@ -18,10 +18,10 @@ export class SocketIO {
     }
 
     async sendNotification(userId: string, @MessageBody() content) {
-        await this.server.to(userId).emit('notification', { content });
+        await this.server.to(userId).emit('notification', content);
     }
 
     async sendRequest(userId: string, @MessageBody() content) {
-        await this.server.to(userId).emit('request', { content });
+        await this.server.to(userId).emit('request', content);
     }
 }
