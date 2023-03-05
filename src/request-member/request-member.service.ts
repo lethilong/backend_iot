@@ -3,6 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
 import { HomeService } from 'src/home/home.service';
+import { TypeNotification } from 'src/notification/enum/type-notification.enum';
+import { NotificationService } from 'src/notification/notification.service';
+import { SocketService } from 'src/socket/socket.service';
 import { UserService } from 'src/user/user.service';
 import { GetRequestsDto } from './dto/get-requests.dto';
 import { ReplyRequestDto } from './dto/reply-request.dto';
@@ -18,6 +21,9 @@ export class RequestMemberService {
         private homeService: HomeService,
         @Inject(forwardRef(() => UserService))
         private userService: UserService,
+        @Inject(forwardRef(() => NotificationService))
+        private notificationService: NotificationService,
+        private socketService: SocketService,
     ) { }
 
     async getRequests(id, data: GetRequestsDto) {
@@ -68,11 +74,27 @@ export class RequestMemberService {
         request.status = status;
         await request.save();
 
+        const notificationData = {
+            content: `${user.name} ${status == StatusRequest.ACCEPTED ? 'accepted' : 'rejected'} your invitation to become a member of ${home.name} home`,
+            user: request.from,
+            type: TypeNotification.REPLY
+        }
+        console.log(request.from.toString())
+        await this.notificationService.createNotification(notificationData);
+        await this.socketService.sendNotification(request.from.toString(), notificationData);
+
         return new ConfirmResponse({
             data: {
                 success: true,
             }
         })
 
+    }
+
+    async getRequestPending(homeId) {
+        return await this.requestMemberModel.find({
+            home: homeId,
+            status: StatusRequest.PENDING,
+        }).select('to status').populate('to', 'name phone')
     }
 }

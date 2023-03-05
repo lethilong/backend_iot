@@ -149,6 +149,8 @@ export class HomeService {
         }
         const roomTypes = await this.roomService.getRooms(homeId);
         home.roomTypes = roomTypes;
+        const requestsPending = await this.requestMemberService.getRequestPending(homeId);
+        home.requests = requestsPending;
         return new ConfirmResponse({
             data: {
                 success: true,
@@ -159,5 +161,28 @@ export class HomeService {
 
     async getHomeByHomeId(id) {
         return await this.homeModel.findById(id);
+    }
+
+    async deleteHome(userId, id) {
+        const home = await this.homeModel.findById(id);
+        if (!home) {
+            throw new BadRequestException('Home not existed');
+        }
+        if (home.host != userId) {
+            throw new ForbiddenException('Only host can remove member');
+        }
+        for (const memberId of home.members) {
+            await this.userService.updateUser(memberId, {
+                $pull: {
+                    homes: id
+                }
+            })
+        }
+        await this.homeModel.findByIdAndDelete(id);
+        return new ConfirmResponse({
+            data: {
+                success: true,
+            }
+        })
     }
 }

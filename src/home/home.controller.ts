@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Patch, Req } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Delete, Req } from '@nestjs/common';
 import { Param, UseGuards } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger/dist/decorators';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -46,5 +46,11 @@ export class HomeController {
     @ApiTags('[HOME] Get home information')
     async getHome(@Req() req, @Param('id') id: string): Promise<ConfirmResponse> {
         return await this.homeService.getHome(req.user.id, id);
+    }
+
+    @Delete(':id')
+    @ApiTags('[HOME] Delete home')
+    async deleteHome(@Req() req, @Param('id') id: string) {
+        return await this.homeService.deleteHome(req.user.id, id);
     }
 }
