@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { GetRequestsDto } from './dto/get-requests.dto';
 import { ReplyRequestDto } from './dto/reply-request.dto';
@@ -19,6 +19,7 @@ export class RequestMemberController {
     }
 
     @Patch(':id')
+    @ApiBody({ type: ReplyRequestDto })
     @ApiTags('[REQUEST-MEMBER] Reply request member')
     async replyRequest(@Req() req, @Param('id') id: string, @Body() data: ReplyRequestDto) {
         return await this.requestMemberService.replyRequest(req.user.id, id, data);
