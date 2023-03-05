@@ -2,8 +2,8 @@ import { forwardRef, Module } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RoomTypeSchema } from './schemas/roomType.schema';
-import { RoomSchema } from './schemas/room.schema';
+import { RoomTypeSchema } from './schema/room-type.schema';
+import { RoomSchema } from './schema/room.schema';
 import { HomeModule } from 'src/home/home.module';
 
 @Module({

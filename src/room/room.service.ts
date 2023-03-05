@@ -8,8 +8,8 @@ import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
 import { HomeService } from 'src/home/home.service';
 import { CreateRoomTypeDto } from './dto/create-room-type.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { RoomDocument } from './schemas/room.schema';
-import { RoomTypeDocument } from './schemas/roomType.schema';
+import { RoomDocument } from './schema/room.schema';
+import { RoomTypeDocument } from './schema/room-type.schema';
 
 @Injectable()
 export class RoomService {
@@ -87,9 +87,18 @@ export class RoomService {
                 }
             },
             {
+                $lookup: {
+                    from: 'devices',
+                    localField: '_id',
+                    foreignField: 'room',
+                    as: 'devices',
+                }
+            },
+            {
                 $project: {
                     name: 1,
-                    roomType: { $first: '$roomType' }
+                    roomType: { $first: '$roomType' },
+                    devicesNum: { $size: '$devices' }
                 }
             },
             {

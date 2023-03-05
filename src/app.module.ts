@@ -11,6 +11,9 @@ import { RoomModule } from './room/room.module';
 import { DeviceModule } from './device/device.module';
 import { MqttModule } from './mqtt/mqtt.module';
 import { join } from 'path';
+import { NotificationModule } from './notification/notification.module';
+import { RequestMemberModule } from './request-member/request-member.module';
+import { ScheduleModule } from './schedule/schedule.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -25,6 +28,9 @@ import { join } from 'path';
     RoomModule,
     DeviceModule,
     MqttModule,
+    NotificationModule,
+    RequestMemberModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

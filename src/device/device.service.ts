@@ -7,8 +7,8 @@ import { RoomService } from 'src/room/room.service';
 import { ControlDeviceDto } from './dto/control-device.dto';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { CreateDeviceDto } from './dto/create-device.dto';
-import { DeviceDocument } from './schemas/device.schema';
-import { DeviceTypeDocument } from './schemas/deviceType.schema';
+import { DeviceDocument } from './schema/device.schema';
+import { DeviceTypeDocument } from './schema/device-type.schema';
 
 @Injectable()
 export class DeviceService {
@@ -39,7 +39,7 @@ export class DeviceService {
     }
 
     async getDevice(id: string) {
-        const device = await (await this.deviceModel.findById(id)).populate('type', 'name');
+        const device = await this.deviceModel.findById(id).populate('type', 'name');
         return new ConfirmResponse({
             data: {
                 success: true,
@@ -94,12 +94,31 @@ export class DeviceService {
         if (!device) {
             throw new BadRequestException('Device not existed');
         }
-        await this.deviceModel.findByIdAndUpdate(id, data);
-        this.mqttService.publish(process.env.MQTT_TOPIC, JSON.stringify({ ...data, deviceId: id }));
+        // console.log({ ...device.control._doc, ...data });
+        // await device.save();
+        await this.deviceModel.findByIdAndUpdate(id, { control: data });
+        this.mqttService.publish(process.env.MQTT_TOPIC_CONTROL, JSON.stringify({ control: data, deviceId: id }));
         return new ConfirmResponse({
             data: {
                 success: true,
             }
         })
+    }
+
+    async getData(payload) {
+        const { message, control, deviceId } = payload;
+        const device = await this.deviceModel.findById(deviceId);
+        if (device) {
+            if (message) {
+                device.data.unshift(message);
+                await device.save();
+            }
+
+            if (control) {
+                device.control = control;
+                await device.save();
+            }
+
+        }
     }
 }

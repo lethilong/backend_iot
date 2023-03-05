@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-import { Room } from "src/room/schemas/room.schema";
-import { User } from "src/user/user.schema";
+import { User } from "src/user/schema/user.schema";
 
 @Schema({ timestamps: true })
 export class Home {
@@ -17,8 +16,6 @@ export class Home {
     @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'User' })
     members: User[];
 
-    // @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Room' })
-    // rooms: Room[];
 }
 
 export type HomeDocument = Home & Document;

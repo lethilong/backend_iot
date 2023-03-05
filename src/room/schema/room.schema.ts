@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-import { Device } from "src/device/schemas/device.schema";
-import { Home } from "src/home/home.schema";
-import { RoomType } from "./roomType.schema";
+import { Device } from "src/device/schema/device.schema";
+import { Home } from "src/home/schema/home.schema";
+import { RoomType } from "./room-type.schema";
 
 @Schema({ timestamps: true, toJSON: { virtuals: true } })
 export class Room {
