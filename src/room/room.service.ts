@@ -126,7 +126,7 @@ export class RoomService {
                 select: {
                     name: 1,
                     type: 1,
-                    status: 1,
+                    control: 1,
                 },
             })
         if (!room) {
