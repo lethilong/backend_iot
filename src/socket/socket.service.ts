@@ -24,4 +24,8 @@ export class SocketService {
     async sendRequest(userId: string, @MessageBody() content) {
         await this.server.to(userId).emit('request', content);
     }
+
+    async sendControl(userId: string, @MessageBody() content) {
+        await this.server.to(userId).emit('control', content);
+    }
 }

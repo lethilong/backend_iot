@@ -173,4 +173,8 @@ export class RoomService {
         }
         await this.roomModel.deleteMany({ home });
     }
+
+    async getRoomHomeById(id) {
+        return await this.roomModel.findById(id).populate('home');
+    }
 }
