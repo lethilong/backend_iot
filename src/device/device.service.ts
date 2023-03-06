@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConfirmResponse } from 'src/common/classes/confirm-response.class';
@@ -9,6 +9,7 @@ import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { DeviceDocument } from './schema/device.schema';
 import { DeviceTypeDocument } from './schema/device-type.schema';
+import { forwardRef } from '@nestjs/common/utils';
 
 @Injectable()
 export class DeviceService {
@@ -17,6 +18,7 @@ export class DeviceService {
         private deviceTypeModel: Model<DeviceTypeDocument>,
         @InjectModel('Device')
         private deviceModel: Model<DeviceDocument>,
+        @Inject(forwardRef(() => RoomService))
         private roomService: RoomService,
         private mqttService: MqttService,
     ) { }
@@ -110,8 +112,8 @@ export class DeviceService {
         const device = await this.deviceModel.findById(deviceId);
         if (device) {
             if (message) {
-                device.data.unshift(message);
-                await device.save();
+                // device.data.unshift(message);
+                // await device.save();
             }
 
             if (control) {
@@ -120,5 +122,9 @@ export class DeviceService {
             }
 
         }
+    }
+
+    async deleteDevicesInRoom(room) {
+        await this.deviceModel.deleteMany({ room });
     }
 }
