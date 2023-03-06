@@ -40,6 +40,7 @@ export class HomeService {
         return new ConfirmResponse({
             data: {
                 success: true,
+                home,
             }
         })
     }
@@ -178,6 +179,7 @@ export class HomeService {
                 }
             })
         }
+        await this.roomService.deleteRoomsInHome(id);
         await this.homeModel.findByIdAndDelete(id);
         return new ConfirmResponse({
             data: {

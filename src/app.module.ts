@@ -13,7 +13,8 @@ import { MqttModule } from './mqtt/mqtt.module';
 import { join } from 'path';
 import { NotificationModule } from './notification/notification.module';
 import { RequestMemberModule } from './request-member/request-member.module';
-import { ScheduleModule } from './schedule/schedule.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronJobModule } from './cron-job/cron-job.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -22,6 +23,7 @@ import { ScheduleModule } from './schedule/schedule.module';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads/',
     }),
+    ScheduleModule.forRoot(),
     UserModule,
     AuthModule,
     HomeModule,
@@ -31,6 +33,7 @@ import { ScheduleModule } from './schedule/schedule.module';
     NotificationModule,
     RequestMemberModule,
     ScheduleModule,
+    CronJobModule,
   ],
   controllers: [AppController],
   providers: [AppService],

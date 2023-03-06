@@ -29,7 +29,7 @@ export class RequestMemberService {
     async getRequests(id, data: GetRequestsDto) {
         const { pageSize = 10, pageNumber = 1, status } = data;
         const findOption = status ? { to: id, status: status } : { to: id }
-        const requests = await this.requestMemberModel.find(findOption).select('from home status').skip(pageSize * (pageNumber - 1)).limit(pageSize).populate('from', 'name phone').populate('home', 'name address');
+        const requests = await this.requestMemberModel.find(findOption).select('from home status createdAt').skip(pageSize * (pageNumber - 1)).limit(pageSize).populate('from', 'name phone').populate('home', 'name address').sort({ 'createdAt': -1 });
         const total = await this.requestMemberModel.count(findOption);
         return new ConfirmResponse({
             data: {
@@ -96,5 +96,17 @@ export class RequestMemberService {
             home: homeId,
             status: StatusRequest.PENDING,
         }).select('to status').populate('to', 'name phone')
+    }
+
+    async getExpiredRequest() {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        const expiredRequests = await this.requestMemberModel.find({
+            status: StatusRequest.PENDING,
+            createdAt: {
+                $lt: date
+            }
+        })
+        return expiredRequests;
     }
 }

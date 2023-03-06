@@ -10,6 +10,7 @@ import { CreateRoomTypeDto } from './dto/create-room-type.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomDocument } from './schema/room.schema';
 import { RoomTypeDocument } from './schema/room-type.schema';
+import { DeviceService } from 'src/device/device.service';
 
 @Injectable()
 export class RoomService {
@@ -20,6 +21,8 @@ export class RoomService {
         private roomTypeModel: Model<RoomTypeDocument>,
         @Inject(forwardRef(() => HomeService))
         private homeService: HomeService,
+        @Inject(forwardRef(() => DeviceService))
+        private deviceService: DeviceService,
     ) { }
 
     async getAllRoomTypes() {
@@ -126,7 +129,7 @@ export class RoomService {
                 select: {
                     name: 1,
                     type: 1,
-                    status: 1,
+                    control: 1,
                 },
             })
         if (!room) {
@@ -150,6 +153,7 @@ export class RoomService {
         if (room.home.members.findIndex(member => member == id) == -1) {
             throw new ForbiddenException('Only member can delete rooms')
         }
+        await this.deviceService.deleteDevicesInRoom(roomId);
         await this.roomModel.findByIdAndDelete(roomId);
         return new ConfirmResponse({
             data: {
@@ -160,5 +164,17 @@ export class RoomService {
 
     async getRoomById(id: string) {
         return await this.roomModel.findById(id);
+    }
+
+    async deleteRoomsInHome(home) {
+        const rooms = await this.roomModel.find({ home });
+        for (const room of rooms) {
+            await this.deviceService.deleteDevicesInRoom(room.id);
+        }
+        await this.roomModel.deleteMany({ home });
+    }
+
+    async getRoomHomeById(id) {
+        return await this.roomModel.findById(id).populate('home');
     }
 }

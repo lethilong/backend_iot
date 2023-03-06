@@ -13,8 +13,8 @@ export class NotificationService {
 
     async getNotifications(id, data) {
         const { pageSize = 10, pageNumber = 1, isRead } = data;
-        const findOption = isRead !== null ? { user: id, isRead: isRead } : { user: id };
-        const notifications = await this.notificationModel.find(findOption).skip(pageSize * (pageNumber - 1)).limit(pageSize);
+        const findOption = (isRead != null || isRead != undefined) ? { user: id, isRead: isRead } : { user: id };
+        const notifications = await this.notificationModel.find(findOption).skip(pageSize * (pageNumber - 1)).limit(pageSize).sort({ 'createdAt': -1 });
         const total = await this.notificationModel.count(findOption);
         return new ConfirmResponse({
             data: {
