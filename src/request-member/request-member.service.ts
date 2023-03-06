@@ -97,4 +97,16 @@ export class RequestMemberService {
             status: StatusRequest.PENDING,
         }).select('to status').populate('to', 'name phone')
     }
+
+    async getExpiredRequest() {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        const expiredRequests = await this.requestMemberModel.find({
+            status: StatusRequest.PENDING,
+            createdAt: {
+                $lt: date
+            }
+        })
+        return expiredRequests;
+    }
 }

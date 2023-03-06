@@ -65,6 +65,7 @@ export class DeviceController {
 
     @MessagePattern('iot/group8/data', { qos: 2 })
     async getData(@Payload() data) {
+        console.log(data);
         await this.deviceService.getData(data);
     }
 }
